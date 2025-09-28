@@ -1,30 +1,33 @@
 const express = require('express');
 const router = express.Router();
+const automationController = require('../controllers/automationController');
 const { protect, authorize, checkSubscription } = require('../middleware/auth');
-
-// Placeholder for automation controller
-const automationController = {
-  getAutomations: async (req, res) => {
-    res.json({ success: true, message: 'Automation endpoint - to be implemented' });
-  },
-  createAutomation: async (req, res) => {
-    res.json({ success: true, message: 'Create automation endpoint - to be implemented' });
-  },
-  triggerDataCollection: async (req, res) => {
-    res.json({ success: true, message: 'Data collection triggered' });
-  }
-};
 
 // All routes are protected
 router.use(protect);
 
-// Get all automations
-router.get('/', automationController.getAutomations);
+// Get automation status
+router.get('/status', automationController.getAutomationStatus);
 
-// Create new automation (requires Professional plan or higher)
-router.post('/', checkSubscription('Professional'), automationController.createAutomation);
+// Get automation analytics
+router.get('/analytics', automationController.getAutomationAnalytics);
+
+// Get workflows
+router.get('/workflows', automationController.getWorkflows);
+
+// Create new workflow (requires Professional plan or higher)
+router.post('/workflows', checkSubscription('Professional'), automationController.createWorkflow);
+
+// Execute workflow
+router.post('/workflows/execute', checkSubscription('Professional'), automationController.executeWorkflow);
 
 // Trigger data collection (Admin only)
 router.post('/data-collection', authorize('Admin'), automationController.triggerDataCollection);
+
+// Send email notification
+router.post('/notifications/email', checkSubscription('Basic'), automationController.sendEmailNotification);
+
+// Send SMS notification
+router.post('/notifications/sms', checkSubscription('Basic'), automationController.sendSMSNotification);
 
 module.exports = router;

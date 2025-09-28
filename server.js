@@ -18,6 +18,7 @@ const leadRoutes = require('./server/routes/leads');
 const analysisRoutes = require('./server/routes/analysis');
 const userRoutes = require('./server/routes/users');
 const automationRoutes = require('./server/routes/automation');
+const reportRoutes = require('./server/routes/reports');
 
 const app = express();
 const server = createServer(app);
@@ -66,6 +67,7 @@ app.use('/api/leads', leadRoutes);
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/automation', automationRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
